@@ -1,0 +1,202 @@
+<div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mt--4">
+              {% if type == 'view' %}
+                <div class="row">
+                    <div class="card card-profile">
+                      {% if singlePost.image %}
+                      <img src="{{ url('/') }}{{ singlePost.image }}" height="300px" alt="Image placeholder" class="card-img-top">
+                      {% endif %}
+                      <div class="row justify-content-center">
+                        <div class="mt-2">
+                          <h2> {{ singlePost.title }} </h2>
+                        </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-lg-12">
+                            <p class="ml-4 mr-4">
+                                {{ singlePost.description }}
+                            </p>
+                          </div>
+                     
+                      </div>
+                      {% if singlePost.comments.count > 0 %}
+                      <div class="row">
+                        <div class="col-md-12">
+                            <div class="blog-comment">
+                            <h3 class="text-black-50 mb--3">Comments</h3>
+                                    <hr/>
+                              <ul class="comments">
+                                {% for comment in singlePost.comments %}
+                                <li class="clearfix">
+                                  <img src="{{ url('/') }}{{ comment.user.userInfo.image }}" class="avatar" alt="">
+                                  <div class="post-comments">
+                                      <p class="meta">{{ comment.created_at|date("M d, Y") }} <a href="">{{ comment.user.name }}</a> <i class="pull-right"></i></p>
+                                      <p>
+                                          {{ comment.description }}
+                                      </p>
+                                  </div>
+                                  
+                                  <ul class="comments">
+                                      {% for reply in comment.replies %}  
+                                      <li class="clearfix">
+                                          <img src="{{ url('/') }}{{ reply.user.userInfo.image }}" class="avatar" alt="">
+                                          <div class="post-comments">
+                                              <p class="meta">{{ reply.created_at|date("M d, Y") }} <a href="">{{ comment.user.name }}</a><i class="pull-right"></i></p>
+                                              <p>
+                                                  {{reply.description}}
+                                              </p>
+                                          </div>
+                                      </li>
+                                      {% endfor %}
+                                  </ul>
+                                </li>
+                                {% endfor %}
+                              </ul>
+                            </div>
+                        </div>
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  {% endif %}
+
+                  {% if type == 'edit' %}
+                  <div class="">
+                    <div class="card card-profile">
+                      <div class="card-body">
+                        <form method="POST" data-request="onEditPost" data-request-redirect="/admin/posts">
+                          <div class="row">
+                            {% if singlePost.image %}
+                            <div id="postImage" class="col-md-12">
+                              <div class="blog-comment">
+                                <div class="col-md-12 px-0 text-center">
+                                  <img src="{{ url('/') }}{{ singlePost.image }}" height="300px" alt="Image placeholder" class="card-img-top">
+
+                                </div>
+                                <div class="col-md-12 px-0 text-right">
+                                  
+
+                                    <button type="button" class="btn btn-primary mt-2 mb-2" onclick="onDeletePostImage({{singlePost.id}})">Delete Image</button>
+                                  
+
+                                </div>
+                              </div>
+                            </div>
+                            {% endif %}
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12 mt-2">
+                              <div class="blog-comment">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Title</label>
+                                    <input type="text" id="input-username" value="{{ singlePost.title }}" class="form-control" placeholder="Title" name="title">
+                                    <input type="hidden" id="input-username" value="{{ singlePost.id }}" class="form-control" placeholder="Title" name="post_id">
+                                </div>
+                            </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12 mt-2">
+                              <div class="blog-comment">
+                              <div class="form-group">
+                                  <label class="form-control-label" for="input-username">Description</label>
+                                  <textarea class="form-control" name="description" rows="5">{{ singlePost.description }}</textarea>
+                              </div>
+                              <div class="d-flex justify-content-end mb-2">
+                                <button type="submit" class="btn btn-sm btn-outline-primary py-2">Update Post</button>
+                              </div>
+                              </div>
+                          </div>
+                        </div>
+                        
+                      </form>
+                      {% if singlePost.comments.count > 0 %}
+                      <div class="row">
+                        <div class="col-md-12">
+                            <div class="blog-comment">
+                            <h3 class="text-black-50 mb--3">Comments</h3>
+                                    <hr/>
+                              <ul class="comments">
+                                {% for comment in singlePost.comments %}
+                                <li class="clearfix" id="divcomment{{comment.id}}">
+                                  <img src="{{ url('/') }}{{ comment.user.userInfo.image }}" class="avatar" alt="">
+                                  <div class="post-comments">
+                                    <div class="d-flex justify-content-between border-bottom mb-4">
+                                      <span>{{ comment.user.name }}</span>
+                                      <span class="meta">{{ comment.created_at|date("M d, Y") }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-end mb-2 edit_comment_bar" style="display: block;">
+                                      <button type="button" onclick="edit_comment()" class="btn btn-sm btn-outline-primary">Edit</button>
+                                      <button type="button" onclick="delete_comment({{comment.id}})" class="btn btn-sm btn-outline-primary">Delete</button>
+                                    </div>
+                                    <div class="d-flex justify-content-end mb-2 update_comment_bar" style="display: none !important;">
+                                      <button type="button" onclick="update_comment({{comment.id}})" class="btn btn-sm btn-outline-primary">Update</button>
+                                      <button type="button" onclick="cancel_comment()" class="btn btn-sm btn-outline-primary">Cancel</button>
+                                    </div>
+                                      <textarea disabled class="form-control comment_box" rows="3" id="comment{{comment.id}}">{{ comment.description }}</textarea>
+                                  </div>
+                                  
+                                  <ul class="comments">
+                                      {% for reply in comment.replies %}  
+                                      <li class="clearfix" id="divreply{{reply.id}}">
+                                          <img src="{{ url('/') }}{{ reply.user.userInfo.image }}" class="avatar" alt="">
+                                          <div class="post-comments">
+                                            <div class="d-flex justify-content-between border-bottom mb-3">
+                                              <span>{{ reply.user.name }}</span>
+                                              <span class="meta">{{ reply.created_at|date("M d, Y") }}</span>
+                                            </div>
+                                            <div class="d-flex justify-content-end mb-2 edit_reply_bar" style="display: block;">
+                                              <button type="button" onclick="edit_reply()" class="btn btn-sm btn-outline-primary">Edit</button>
+                                              <button type="button" onclick="delete_reply({{reply.id}})" class="btn btn-sm btn-outline-primary">Delete</button>
+                                              
+                                            </div>
+                                            <div class="d-flex justify-content-end mb-2 update_reply_bar" style="display: none !important;">
+                                              <button type="button" onclick="update_reply({{reply.id}})" class="btn btn-sm btn-outline-primary">Update</button>
+                                              <button type="button" onclick="cancel_reply()" class="btn btn-sm btn-outline-primary">Cancel</button>
+                                            </div>
+                                              <!-- <p class="meta">{{ reply.created_at|date("M d, Y") }} <a href="">{{ comment.user.name }}</a><i class="pull-right"></i></p> -->
+                                              <textarea disabled class="form-control reply_box" rows="3" id="reply{{reply.id}}">{{ reply.description }}</textarea>
+                                              <!-- <p>
+                                                  {{reply.description}}
+                                              </p> -->
+                                          </div>
+                                      </li>
+                                      {% endfor %}
+                                  </ul>
+                                </li>
+                                {% endfor %}
+                              </ul>
+                            </div>
+                        </div>
+                      </div>
+                      {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+  function onDeletePostImage(id){
+    $.request('onDeletePostImage', {
+            data: {
+                id: id
+                }
+        }).done((image)=>{
+          console.log(image);
+          $('#postImage').empty();
+        });;
+  }
+</script>

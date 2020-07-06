@@ -1,0 +1,414 @@
+layout="default"
+url="/admin/dashboard"
+[account]
+[session]
+==
+function onStart() {
+  $user = Auth::getUser();
+  if (!$user) {
+    return Redirect::to('/');
+  }
+}
+
+==
+<style>
+  #PostsPerMonth{
+    width: 100% !important;
+    height: 350px !important;
+  }
+  #CommentsPerMonth{
+    width: 100% !important;
+    height: 350px !important;
+  }
+</style>
+    <!-- Header -->
+    <div class="header pb-5">
+      <div class="">
+        <div class="header-body mt-5">
+          <!-- Card stats -->
+          <div class="row">
+            <div class="col-xl-4 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body shadow-lg">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Posts</h5>
+                      <span class="h2 font-weight-bold mb-0">{{posts.count()}}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                        <i class="far fa-clipboard"></i>
+                      </div>
+                    </div>
+                  </div>
+                 
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body shadow-lg">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Comments</h5>
+                      <span class="h2 font-weight-bold mb-0">{{ comment.count() + commentsReply.count() }}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                        <i class="fa fa-comments"></i>
+                      </div>
+                    </div>
+                  </div>
+               
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body shadow-lg">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Total Users</h5>
+                      <span class="h2 font-weight-bold mb-0">{{ users.count() }}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                        <i class="fa fa-users"></i>
+                      </div>
+                    </div>
+                  </div>
+               
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body shadow-lg">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Industries</h5>
+                      <span class="h2 font-weight-bold mb-0">{{industries.count()}}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                        <i class="fa fa-industry"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <p class="mt-3 mb-0 text-sm">
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                    <span class="text-nowrap">Since last month</span>
+                  </p> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body shadow-lg">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Industry Parts</h5>
+                      <span class="h2 font-weight-bold mb-0">{{ industryParts.count() }}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                        <i class="fa fa-cogs"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <p class="mt-3 mb-0 text-sm">
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                    <span class="text-nowrap">Since last month</span>
+                  </p> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body shadow-lg">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Problems</h5>
+                      <span class="h2 font-weight-bold mb-0">{{ industrProblems.count() }}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                        <i class="fa fa-tasks"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="row">
+            <div class="col-md-6">
+              <div class="card bg-default">
+                <div class="card-body">
+                  <h5 class="h3 text-white mb-0">Posts Per Month</h5>
+                    <div class="chart">
+                        <canvas id="PostsPerMonth"></canvas>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card bg-default">
+                <div class="card-body">
+                  <h5 class="h3 text-white mb-0">Comments Per Month</h5>
+                    <div class="chart">
+                        <canvas id="CommentsPerMonth"></canvas>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+          <div class="row">
+            <div class="col-xl-8">
+              <div class="card bg-default">
+                <div class="card-header bg-transparent">
+                  <div class="row align-items-center">
+                    <div class="col">
+                      <h6 class="text-light text-uppercase ls-1 mb-1">Overview</h6>
+                      <h5 class="h3 text-white mb-0">Sales value</h5>
+                    </div>
+                    <div class="col">
+                      <ul class="nav nav-pills justify-content-end">
+                        <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-prefix="$" data-suffix="k">
+                          <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
+                            <span class="d-none d-md-block">Month</span>
+                            <span class="d-md-none">M</span>
+                          </a>
+                        </li>
+                        <li class="nav-item" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}' data-prefix="$" data-suffix="k">
+                          <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
+                            <span class="d-none d-md-block">Week</span>
+                            <span class="d-md-none">W</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <!-- Chart -->
+                  <div class="chart">
+                    <!-- Chart wrapper -->
+                    <canvas id="chart-sales-dark" class="chart-canvas"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4">
+              <div class="card">
+                <div class="card-header bg-transparent">
+                  <div class="row align-items-center">
+                    <div class="col">
+                      <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
+                      <h5 class="h3 mb-0">Total orders</h5>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <!-- Chart -->
+                  <div class="chart">
+                    <canvas id="chart-bars" class="chart-canvas"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+         
+
+        </div>
+      </div>
+    </div>
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+
+    <script>
+      Months = [];
+      MonthsCount = [];
+      LabelsData = [];
+      $.request('onCheckPosts', {
+            data: {
+                value: "Test"
+            }
+        }).done(function (data) {
+            console.log(data.data);
+            if (data.data == 1) {
+                // $('#firstTimeModal').modal('show');
+            }
+            Months = data[0];
+            MonthsCount = data[1];
+            //console.log(data[0]);
+            console.log("test3");
+            console.log(Months[0]);
+            for (x in [1,2,3,4,5,6,7,8,9,10,11,12])
+            {
+              console.log(Months[x]);
+              if(Months[x] == 1)
+              {
+                LabelsData.push("January");
+              }
+              else if(Months[x] == 2)
+              {
+                LabelsData.push("February");
+              }
+              else if(Months[x] == 3)
+              {
+                LabelsData.push("March");
+              }
+              else if(Months[x] == 4)
+              {
+                LabelsData.push("April");
+              }
+              else if(Months[x] == 5)
+              {
+                LabelsData.push("May");
+              }
+              else if(Months[x] == 6)
+              {
+                LabelsData.push("June");
+              }
+              else if(Months[x] == 7)
+              {
+                LabelsData.push("July");
+              }
+              else if(Months[x] == 8)
+              {
+                LabelsData.push("August");
+              }
+              else if(Months[x] == 9)
+              {
+                LabelsData.push("September");
+              }
+              else if(Months[x] == 10)
+              {
+                LabelsData.push("October");
+              }
+              else if(Months[x] == 11)
+              {
+                LabelsData.push("November");
+              }
+              else if(Months[x] == 12)
+              {
+                LabelsData.push("December");
+              }
+            }
+            // bar chart data
+      var barData = {
+          labels : LabelsData,
+          datasets : [
+              {
+                  fillColor : "#48A497",
+                  strokeColor : "#48A4D1",
+                  data : MonthsCount
+              }
+          ]
+      }
+      // get bar chart canvas
+      var income = document.getElementById("PostsPerMonth").getContext("2d");
+      // draw bar chart
+      new Chart(income).Bar(barData);
+
+            
+        });
+
+      MonthsC = [];
+      MonthsCountC = [];
+      LabelsDataC = [];
+      $.request('onCheckComments', {
+            data: {
+                value: "Test"
+            }
+        }).done(function (data) {
+            console.log(data.data);
+            if (data.data == 1) {
+                // $('#firstTimeModal').modal('show');
+            }
+            MonthsC = data[0];
+            MonthsCountC = data[1];
+            //console.log(data[0]);
+            console.log("test2");
+            console.log(MonthsC[0]);
+            for (x in [1,2,3,4,5,6,7,8,9,10,11,12])
+            {
+              console.log(MonthsC[x]);
+              if(MonthsC[x] == 1)
+              {
+                LabelsDataC.push("January");
+              }
+              else if(MonthsC[x] == 2)
+              {
+                LabelsDataC.push("February");
+              }
+              else if(MonthsC[x] == 3)
+              {
+                LabelsDataC.push("March");
+              }
+              else if(MonthsC[x] == 4)
+              {
+                LabelsDataC.push("April");
+              }
+              else if(MonthsC[x] == 5)
+              {
+                LabelsDataC.push("May");
+              }
+              else if(MonthsC[x] == 6)
+              {
+                LabelsDataC.push("June");
+              }
+              else if(MonthsC[x] == 7)
+              {
+                LabelsDataC.push("July");
+              }
+              else if(MonthsC[x] == 8)
+              {
+                LabelsDataC.push("August");
+              }
+              else if(MonthsC[x] == 9)
+              {
+                LabelsDataC.push("September");
+              }
+              else if(MonthsC[x] == 10)
+              {
+                LabelsDataC.push("October");
+              }
+              else if(MonthsC[x] == 11)
+              {
+                LabelsDataC.push("November");
+              }
+              else if(MonthsC[x] == 12)
+              {
+                LabelsDataC.push("December");
+              }
+            }
+            // bar chart data
+      var barData = {
+          labels : LabelsDataC,
+          datasets : [
+              {
+                  fillColor : "#48A497",
+                  strokeColor : "#48A4D1",
+                  data : MonthsCountC
+              }
+          ]
+      }
+      // get bar chart canvas
+      var income2 = document.getElementById("CommentsPerMonth").getContext("2d");
+      // draw bar chart
+      new Chart(income2).Bar(barData);
+
+            
+        });
+        
+      
+      
+  </script> -->

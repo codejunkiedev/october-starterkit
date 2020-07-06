@@ -1,0 +1,206 @@
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% if type == 'view' %}
+                <div class="row">
+                    <div class="card card-profile center col-md-10">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-3 order-lg-2">
+                                <div class="card-profile-image">
+                                    <a href="#">
+                                    <img src="{{ singleUser.userInfo.image }}" class="rounded-circle">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card-profile-stats d-flex justify-content-center mt-5">
+                                        <div>
+                                            <span class="heading">{{ singleUser.posts.count() }}</span>
+                                            <span class="description">Posts</span>
+                                        </div>
+                                        <div>
+                                            <span class="heading">{{ singleUser.comments.count() + singleUser.replies.count() }}</span>
+                                            <span class="description">Comments</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <h5 class="h3">
+                                    {{ singleUser.name }}<span class="font-weight-light"></span>
+                                </h5>
+                                <div class="h5">
+                                    <i class="ni location_pin mr-2"></i>Industry: <span class="font-weight-300">{% for industry in singleUser.industries  %}{{ industry.industry.name }}, {% endfor %}</span>
+                                </div>
+                                <div class="h5 mt-4">
+                                    <i class="ni business_briefcase-24 mr-2"></i> Industry Part: <span class="font-weight-300">{% for industryPart in singleUser.industryParts  %}{{ industryPart.industryPart.name }}, {% endfor %}</span>
+                                </div>
+                                <div class="h5 mt-4">
+                                    <i class="ni business_briefcase-24 mr-2"></i> Problems: <span class="font-weight-300">{% for problem in singleUser.industryProblems  %}{{ problem.problem.name }}, {% endfor %}</span>
+                                </div>
+                       
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if type == 'edit' %}
+                <div class="row center col-md-12">
+                    <form class="col" data-request="onEditUser" data-request-redirect="/admin/users" data-request-flash>
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Username</label>
+                                        <input type="text" id="input-username" class="form-control" placeholder="Username" name="username" value="{{ singleUser.username }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-email">Email address</label>
+                                        <input type="email" id="input-email" class="form-control" name="email" placeholder="jesse@example.com" value="{{ singleUser.email }}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-first-name">Full Name</label>
+                                        <input type="text" id="input-first-name" class="form-control" name="name" placeholder="First name" required value="{{ singleUser.name }}">
+                                        <input type="hidden" value="{{ singleUser.id }}" name="user_id">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-right">
+                                    <button type="button" class="btn btn-primary mt-2 mb-2" onclick="onDeleteUserImage({{singleUser.id}})">Delete Image</button>
+                                  
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-4" />
+                        <!-- Address -->
+                        <h6 class="heading-small text-muted mb-4">Other information</h6>
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-address">Industry</label>
+                                        <select class="industry_picker form-control bg-transparent" onchange="onChangeIndustry()" data-live-search="true" name="industry[]" id="industry_id" data-dropup-auto="false" required multiple>
+                                            <option value="" disabled>Select Industry</option>
+                                            {% for industry in industries %}  
+                                            <option value="{{ industry.id }}" {% for userIndustry in singleUser.industries %} {% if userIndustry.industry.id == industry.id %} selected  {% endif %} {% endfor %}>{{industry.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-city">Industry Part</label>
+                                        <select class="industry_picker form-control bg-transparent" data-live-search="true" id="industry_part" name="industry_part[]" data-dropup-auto="false" multiple required>
+                                            {% for industryPart in industryParts %}
+                                            <option value="{{ industryPart.id }}" {% for problem in singleUser.industryParts %} {% if problem.industry_part_id == industryPart.id %} selected  {% endif %} {% endfor %}>{{ industryPart.name }}</option> 
+                                            {% endfor %}
+                                        </select>
+                                        <!-- <input type="text" id="input-city" class="form-control" placeholder="Industry Part" name="industry_part" required value="{{ singleUser.userInfo.industry_part }}"> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-country">Problem</label>
+                                        <select class="industry_picker form-control bg-transparent" data-live-search="true" id="problem" name="problem[]" data-dropup-auto="false" multiple required>
+                                            {% for industryProblem in IndustryProblems %}
+                                            <option value="{{ industryProblem.id }}" {% for problem in singleUser.industryProblems %} {% if problem.problem_id == industryProblem.id %} selected  {% endif %} {% endfor %}>{{ industryProblem.name }}</option>                                        
+                                            {% endfor %}
+                                        </select>
+                                        <!-- <input type="text" id="input-country" class="form-control" placeholder="Problem" name="problem" required value="{{ singleUser.userInfo.problem }}"> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer p-0">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                          </div>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+     $(document).ready(function() {
+      $('.industry_picker').selectpicker();
+      $('.industry_picker button').removeClass('btn btn-light').addClass('form-control');
+    });
+
+    function onChangeIndustry() {
+        var industryId = $('#industry_id').val();
+        if(industryId.length > 0) {
+            $.request('onGetIndustryName', {
+                data: {
+                    id: industryId
+                }
+            }).done((industryName)=> {
+                $("#industry").val(industryName.industry.name);
+                var options;
+                $('#industry_part').empty();
+                for (var i = 0; i < industryName.industryParts.length; i++) {
+                    options += '<option value="'+industryName.industryParts[i].id+'">'+industryName.industryParts[i].name +'</option>';
+                }
+                $('#industry_part').append(options);
+                $('#industry_part').selectpicker('refresh');
+                $('.industry_picker button').removeClass('btn-light');
+
+                var problemOptions;
+                $('#problem').empty();
+                for (var i = 0; i < industryName.industryProblem.length; i++) {
+                    problemOptions += '<option value="'+industryName.industryProblem[i].id+'">'+industryName.industryProblem[i].name +'</option>';
+                }
+                $('#problem').append(problemOptions);
+                $('#problem').selectpicker('refresh');
+                $('.industry_picker button').removeClass('btn-light');
+                });
+        } else {
+            $('#problem').empty();
+            $('#industry_part').empty();
+        }
+       
+    }
+
+    function onChangeIndustryPart() {
+        var industryPart = $('#industry_part').val();
+        $.request('onGetIndustryParts', {
+            data: {
+                id: industryPart
+            }
+        }).done((industryName)=> {
+            console.log(industryName)
+            var options;
+            $('#problem').empty();
+            for (var i = 0; i < industryName.length; i++) {
+                options += '<option value="'+industryName[i].id+'">'+industryName[i].name +'</option>';
+            }
+            $('#problem').append(options);
+            $('#problem').selectpicker('refresh');
+            $('.industry_picker button').removeClass('btn-light');
+        });
+    }
+</script>

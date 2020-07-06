@@ -1,0 +1,86 @@
+layout="login"
+url="/user/register"
+[account]
+[session]
+[Authentication]
+==
+function onStart() {
+    $user = Auth::getUser();
+    if($user) {
+        //return Redirect::to('/admin/dashboard');
+    }
+}
+==
+<!-- Header -->
+<div class="header bg-gradient-primary pt-lg-9">
+    <div class="separator separator-bottom separator-skew zindex-100">
+        <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
+        </svg>
+    </div>
+</div>
+<!-- Page content -->
+<div class="container mt--12 pb-5">
+    <div class="justify-content-center mb-4 mt-4 row">
+        <img src="{{ 'assets/img/brand/cj-whitelogo.png'|theme }}" style="width: 250px;">
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card bg-secondary border-0 mb-0">
+                <div class="card-body px-lg-5 py-lg-5">
+                    <div class="text-center text-muted mb-4">
+                        <small>Sign up with credentials</small>
+                    </div>
+                    <form role="form" method="POST" data-request="onRegister" data-request-flash>
+                        <div class="form-group">
+                          <div class="input-group input-group-merge input-group-alternative mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                            </div>
+                            <input class="form-control" placeholder="Name" type="text" name="name">
+                            <input class="form-control" placeholder="code" type="hidden" name="code" value="user">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="input-group input-group-merge input-group-alternative mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                            </div>
+                            <input class="form-control" placeholder="Email" type="email" name="email">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="input-group input-group-merge input-group-alternative">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                            </div>
+                            <input class="form-control" placeholder="Password" type="password" name="password">
+                          </div>
+                        </div>
+                        <div class="row my-4">
+                          <div class="col-12">
+                            <div class="custom-control custom-control-alternative custom-checkbox">
+                              <input class="custom-control-input" id="customCheckRegister" type="checkbox">
+                              <label class="custom-control-label" for="customCheckRegister">
+                                <span class="text-muted">I agree with the <a href="#!">Privacy Policy</a></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="text-center">
+                          <button type="submit" class="btn btn-primary mt-4">Create account</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-6">
+                  <a href="#" class="text-light"><small>Forgot password?</small></a>
+                </div>
+                <div class="col-6 text-right">
+                  <a href="/user/register" class="text-light"><small>Create new account</small></a>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,6 @@
+plugin:
+    name: 'codejunkie.starterkit::lang.plugin.name'
+    description: 'codejunkie.starterkit::lang.plugin.description'
+    author: Codejunkie
+    icon: oc-icon-adjust
+    homepage: ''

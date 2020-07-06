@@ -1,0 +1,151 @@
+layout="default"
+url="admin/industryparts/:part_id?"
+[Admin]
+[account]
+[session]
+==
+function onStart() {
+  $user = Auth::getUser();
+  if (!$user) {
+    return Redirect::to('/admin/login');
+  } else {
+    if($this->param('part_id')) {
+      $this['type'] = 'edit';
+      $id = $this->param('part_id');
+      $industry = $this['industryPart'] = \Codejunkie\Bluecollar\Models\IndustryPart::find($id);
+      if(!$industry) {
+        return Redirect::to('/admin/industryparts');
+      }
+    } else {
+      $this['type'] = 'add';
+    }
+  }
+  $this['industries'] = \Codejunkie\Bluecollar\Models\Industry::all();
+  $this['industryParts'] = \Codejunkie\Bluecollar\Models\IndustryPart::all();
+}
+==
+<div class="row mt-6">
+    <div class="col-md-8">
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header">
+          <h3 class="mb-0">Industry Parts</h3>
+        </div>
+        <div class="table-responsive py-4">
+          <div id="datatable-buttons_wrapper" class="dataTables_wrapper dt-bootstrap4">
+            <table id="industries" class="table table-flush dataTable" id="datatable-buttons" role="grid" aria-describedby="datatable-buttons_info">
+            <thead class="thead-light">
+              <tr role="row">
+                <th class="sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 20px;">#</th>
+                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 282px;">Industry</th>
+                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 282px;">Industry Part</th>
+                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 114px;">Action</th></tr>
+            </thead>
+            <tbody>          
+              {% for part in industryParts %}        
+              <tr role="row" class="odd">
+                  <td class="sorting_1">{{ loop.index }}</td>
+                  <td>{{ part.industry.name }}</td>
+                  <td>{{ part.name }}</td>
+                  <td class="text-right">
+                    <div class="dropdown">
+                      <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                        <a class="dropdown-item" href="/admin/industryparts/{{ part.id }}">Edit</a>
+                        <a class="dropdown-item" data-request="onDeleteIndustryPart" data-request-data="id: {{ part.id }}" data-request-redirect="/admin/industryparts">Delete</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="mb-0">Add Industry Parts</h3>
+        </div>
+        <div class="card-body">
+          {% if type == 'add' %}
+          <form data-request="onAddIndustryPart" data-request-redirect="/admin/industryparts" data-request-flash>
+              <div class="row">
+                  <div class="col">
+                    <label class="form-control-label" for="input-username">Industry</label>
+                    <select class="industry_picker form-control bg-transparent" data-live-search="true" id="industry_id" name="industry_id" data-dropup-auto="false" required>
+                      <option value="" disabled selected>Select Industry</option>
+                            {% for industry in industries %}  
+                            <option value="{{ industry.id }}">{{industry.name}}</option>
+                            {% endfor %}
+                    </select>
+                  </div>
+              </div>
+              <div class="row mt-2">
+                  <div class="col">
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Industry Part</label>
+                            <input type="text" id="input-username" class="form-control" placeholder="Name" name="name">
+                        </div>
+                  </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+              </div>
+            </form>
+            {% else %}
+            <form data-request="onUpdateIndustryPart" data-request-redirect="/admin/industryparts" data-request-flash>
+              <div class="row">
+                  <div class="col">
+                    <label class="form-control-label" for="input-username">Industry</label>
+                    <select class="industry_picker form-control bg-transparent" data-live-search="true" id="industry_id" name="industry_id" data-dropup-auto="false" required>
+                      <option value="" disabled selected>Select Industry</option>
+                            {% for industry in industries %}  
+                            <option value="{{ industry.id }}" {% if industryPart.industry.id == industry.id%} selected {% endif %}>{{industry.name}}</option>
+                            {% endfor %}
+                    </select>
+                  </div>
+              </div>
+              <div class="row mt-2">
+                  <div class="col">
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Industry Part</label>
+                            <input type="text" id="input-username" class="form-control" placeholder="Name" name="name" value="{{ industryPart.name }}">
+                            <input type="hidden" id="input-username" class="form-control" placeholder="Name" name="id" value="{{ industryPart.id }}">
+                        </div>
+                  </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+              </div>
+            </form>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      $('#industries').dataTable({
+        "language": {
+        "paginate": {
+          "previous": '<i class="fa fa-chevron-left fa-lg" aria-hidden="true"></i>',
+          "next": '<i class="fa fa-chevron-right fa-lg" aria-hidden="true"></i>'
+         }
+        }
+      });
+      // $('#industries').DataTable();
+      $('.industry_picker').selectpicker();
+      $('.industry_picker button').removeClass('btn btn-light').addClass('form-control');
+    });
+
+  </script>
