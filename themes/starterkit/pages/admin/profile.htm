@@ -1,0 +1,65 @@
+layout="default"
+url="admin/profile"
+[account]
+[session]
+[Admin]
+==
+function onStart() {
+  $user = Auth::getUser();
+  if (!$user) {
+    return Redirect::to('/admin/login');
+  }
+  $this['singleUser'] = \Rainlab\User\Models\User::find($user->id);
+}
+==
+<div class="container-fluid mt-4">
+    <div class="col pb-3 border-bottom">
+        <h1>My Profile</h1>
+    </div>
+    <form class="mt-4" data-request="onAddOrEditUser" data-request-flash data-request-redirect="/admin/profile">
+        <div class="pl-lg-4">
+            <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-first-name">Name</label>
+                    <input type="text" id="input-first-name" class="form-control" placeholder="Name" name="name" value="{{ singleUser.name }}" required>
+                    <input type="hidden" name="user_id" value="{{ singleUser.id }}">
+                    <input type="hidden" name="user_group" value="{{ singleUser.groups[0].code }}">
+                  </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="form-control-label" for="input-username">Username</label>
+                        <input type="text" id="input-username" class="form-control" name="username" placeholder="Username" value="{{ singleUser.username }}" readonly required>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="form-control-label" for="input-email">Email address</label>
+                        <input type="email" id="input-email" class="form-control" name="email" placeholder="jesse@example.com" value="{{ singleUser.email }}" readonly required>
+                    </div>
+                </div>
+            </div>
+          
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="form-control-label" for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="form-control-label" for="password_confirmation">Confirm Password</label>
+                        <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="">
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary text-center">Submit</button>
+            
+        </div>
+
+      </form>
+</div>
