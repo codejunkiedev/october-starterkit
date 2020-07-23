@@ -9,7 +9,8 @@ class Plugin extends PluginBase
     public function registerComponents()
     {
         return [
-            'Codejunkie\Starterkit\Components\Authentication' => 'Authentication'
+            'Codejunkie\Starterkit\Components\Authentication' => 'Authentication',
+            'Codejunkie\Starterkit\Components\Admin' => 'Admin'
         ];
     }
 

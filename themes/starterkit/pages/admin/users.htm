@@ -2,6 +2,7 @@ layout="default"
 url="admin/users"
 [account]
 [session]
+[Admin]
 ==
 function onStart() {
   $user = Auth::getUser();
@@ -11,70 +12,57 @@ function onStart() {
   $this['users'] = \Rainlab\User\Models\User::all();
 }
 ==
-<div class="row mt-6">
-    <div class="col">
-      <div class="card">
-        <!-- Card header -->
-        <div class="card-header">
-          <h3 class="mb-0">Users</h3>
-        </div>
-        <div class="table-responsive py-4">
-          <div id="datatable-buttons_wrapper" class="dataTables_wrapper dt-bootstrap4">
-            <table id="users" class="table table-flush dataTable" id="datatable-buttons" role="grid" aria-describedby="datatable-buttons_info">
-            <thead class="thead-light">
-              <tr role="row">
-                <th class="sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 20px;">#</th>
-                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 50px;">Profile Picture</th>
-                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 282px;">Name</th>
-                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 137px;">Email</th>
-                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 60px;">Username</th>
-                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 114px;">Action</th></tr>
-            </thead>
-            <tbody>          
-              {% for user in users %}        
-              <tr role="row" class="odd">
-                  <td class="sorting_1">{{ loop.index }}</td>
-                  {% if user.image == "" %}
-                  <td><i class="far fa-user"></i></td>
-                  {% else %}
-                  <td><img src="{{ user.image.getThumb(100, 100, {'mode':'exact', 'quality': 80, 'extension': 'webp'}) }}" alt="Description Image" /></td>
-                  {% endif %}
-                  <td>{{ user.name }}</td>
-                  <td>{{ user.email }}</td>
-                  <td>{{ user.username }}</td>
-                  <td class="text-right">
-                    <a class="mx-2" data-request="onShowUser" data-request-data="id: {{ user.id }}, type: 'edit'" data-request-update="user-modal: '#user-modal'" data-request-flash data-request-success="onOpenModal()"><i class="far fa-edit"></i></a>
-                    <a class="mx-2" data-request="onDeleteUser" data-request-data="id: {{ user.id }}" data-request-redirect="/admin/users"><i class="far fa-trash-alt"></i></a>
-                  </td>
-                </tr>
-                {% endfor %}
-            </tbody>
+<div class="container-fluid mt-4">
+  <div class="col pb-3 border-bottom">
+      <h1>Users</h1>
+  </div>
+  <div class="table-example bg-white border mt-5 rounded-15">
+      <div class="table-responsive py-3">
+          <table id="usersTable" class="table mb-0">
+              <thead>
+                  <tr>
+                      <th class="border-top-0">#</th>
+                      <th class="border-top-0">Name</th>
+                      <th class="border-top-0">Email</th>
+                      <th class="border-top-0">Username</th>
+                      <th class="border-top-0">Role</th>
+                      <th class="border-top-0">Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+                {% for user in users %}
+                  <tr>
+                      <td>{{ loop.index }}</td>
+                      <td>{{ user.name }}</td>
+                      <td>{{ user.email }}</td>
+                      <td>{{ user.username }}</td>
+                      <td>{{ user.groups[0].name }}</td>
+                      <td>
+                        <a type="button" href="/admin/users/add/{{user.id}}" class="btn btn-sm btn-primary text-white">Edit</a>
+                        <button type="button" class="btn btn-sm btn-danger" data-request-data="id: {{user.id}}" data-request="onDeleteUser" data-request-redirect="/admin/users">Delete</button>
+                      </td>
+                  </tr>
+                 {% endfor %} 
+              </tbody>
           </table>
-        </div>
-        </div>
       </div>
-    </div>
   </div>
-  <div id="user-modal">
-    {% partial "user-modal" %}
-  </div>
+</div>
 
-  <script>
-    $(document).ready(function() {
-      $('#users').dataTable({
-        "language": {
-        "paginate": {
-          "previous": '<i class="fa fa-chevron-left fa-lg" aria-hidden="true"></i>',
-          "next": '<i class="fa fa-chevron-right fa-lg" aria-hidden="true"></i>'
-         }
-        }
+<script>
+  $(document).ready(function () {
+      $('#usersTable').DataTable({
+          "ordering": true,
+          dom: 'Bfrtip',
+          buttons: [
+              'copy', 'excel', 'pdf', 'print'
+          ],
+          "language": {
+              "paginate": {
+                  "previous": '<i class="fa fa-chevron-left fa-sm" aria-hidden="true"></i>',
+                  "next": '<i class="fa fa-chevron-right fa-sm" aria-hidden="true"></i>'
+              }
+          }
       });
-      $('.industry_picker').selectpicker();
-      $('.industry_picker button').removeClass('btn btn-light').addClass('form-control');
-    });
-
-    function onOpenModal() {
-      $("#userModal").modal("show");
-    }
-
-  </script>
+  });
+</script>

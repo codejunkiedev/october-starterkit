@@ -1,0 +1,81 @@
+layout="default"
+url="admin/users/add/:id?"
+[account]
+[session]
+[Admin]
+==
+function onStart() {
+  $user = Auth::getUser();
+  if (!$user) {
+    return Redirect::to('/admin/login');
+  }
+  $this['users'] = \Rainlab\User\Models\User::all();
+  if($this->param('id')) {
+      $this['singleUser'] = \Rainlab\User\Models\User::find($this->param('id'));
+  }
+  $this['userGroups'] = \Rainlab\User\Models\UserGroup::all();
+}
+==
+<div class="container-fluid mt-4">
+    <div class="col pb-3 border-bottom">
+        <h1>Add New User</h1>
+    </div>
+    <form class="mt-4" data-request="onAddOrEditUser" data-request-flash data-request-redirect="/admin/users">
+        <div class="pl-lg-4">
+            <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-first-name">Name</label>
+                    <input type="text" id="input-first-name" class="form-control" placeholder="Name" name="name" value="{{ singleUser.name }}" required>
+                    {% if this.param.id %}
+                    <input type="hidden" name="user_id" value="{{ singleUser.id }}">
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                      <label class="form-control-label" for="input-first-name">User Group</label>
+                      <select class="form-control" data-toggle="select" title="Simple select" name="user_group" data-live-search="true" data-live-search-placeholder="Search ...">
+                        {% for group in userGroups %}
+                        <option value="{{ group.code }}" {% if singleUser.groups[0].code == group.code %}selected{% endif %}>{{ group.name }}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                  </div>
+                
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="form-control-label" for="input-username">Username</label>
+                        <input type="text" id="input-username" class="form-control" name="username" placeholder="Username" value="{{ singleUser.username }}" required>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="form-control-label" for="input-email">Email address</label>
+                        <input type="email" id="input-email" class="form-control" name="email" placeholder="jesse@example.com" value="{{ singleUser.email }}" {% if this.param.id %} readonly {%endif%} required>
+                    </div>
+                </div>
+            </div>
+          
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="form-control-label" for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="form-control-label" for="password_confirmation">Confirm Password</label>
+                        <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="">
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary text-center">Submit</button>
+            
+        </div>
+
+      </form>
+</div>

@@ -1,23 +1,17 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
-    {% partial "login/head" %}
-    <script src="{{ 'assets/dist/jquery/jquery.min.js'|theme }}"></script>
-    <script src="{{ 'assets/vendor/jquery/dist/jquery.min.js'|theme }}"></script>
-    {% framework extras %}
-  </head>
+<head>
+  {% partial "login/head" %}
+  <script src="{{ 'assets/dist/jquery/jquery.min.js'|theme }}"></script>
+  <script src="{{ 'assets/vendor/jquery/dist/jquery.min.js'|theme }}"></script>
+  {% framework extras %}
+</head>
 
-  <body class="bg-default">
-    <div class="main-content">
+<body class="login-bg">
+    <div class="col-md-6 bg-white px-5 py-5 h-100vh">
       {% page %}
     </div>
-    <script src="{{ 'assets/vendor/jquery/dist/jquery.min.js'|theme }}"></script>
-    <script src="{{ 'assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js'|theme }}"></script>
-    <script src="{{ 'assets/vendor/js-cookie/js.cookie.js'|theme }}"></script>
-    <script src="{{ 'assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js'|theme }}"></script>
-    <script src="{{ 'assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js'|theme }}"></script>
-    <script src="{{ 'assets/js/argon.js?v=1.2.0'|theme }}"></script>
-  </body>
+</body>
 
 </html>

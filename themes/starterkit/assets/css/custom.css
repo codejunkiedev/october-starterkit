@@ -1,0 +1,68 @@
+body {
+    font-family: NunitoSansRegular !important;
+}
+
+.text-new-black {
+    color: #202224;
+}
+
+.bg-new-black {
+    background-color: #202224;
+}
+
+.text-new-orange {
+    color: #ff8743;
+}
+
+.bg-new-orange {
+    background-color: #ff8743;
+}
+
+.text-new-blue {
+    color: #4279ee;
+}
+
+.bg-new-blue {
+    background-color: #4279ee;
+}
+
+.bg-light-blue {
+    background-color: rgba(66, 121, 238, 0.2);
+}
+
+.bg-light-orange {
+    background-color: rgba(255, 135, 67, 0.2);
+}
+
+.bg-light-success {
+    background-color: rgba(45, 206, 137, 0.2);
+}
+
+.bg-light-danger {
+    background-color: rgba(245, 54, 92, 0.2);
+}
+
+.slick-prev:before,
+.slick-next:before {
+    font-size: 30px !important;
+    color: lightgrey !important;
+}
+
+.mt-20vh {
+    margin-top: 20vh;
+}
+
+.active-border-left {
+    border-left: 3px solid #4279ee;
+}
+
+.img-xs {
+    width: 50px;
+}
+
+.login-bg {
+    background-image: url(../img/login-img.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+}
