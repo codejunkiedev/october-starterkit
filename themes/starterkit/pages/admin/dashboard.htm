@@ -8,6 +8,12 @@ function onStart() {
   if (!$user) {
     return Redirect::to('/');
   }
+  $date = date("Y-m-d H:i:s");
+  $date = strtotime($date);
+  $date = strtotime("-1 day", $date);
+  //For Signups 24Hr
+  $this['UsersSignups'] = $UsersLogins = \RainLab\User\Models\User::where('created_at','>=',date("Y-m-d "."00:00:00",$date))->where('created_at','<=',date("Y-m-d "."00:00:00"))->count();
+  $this['users'] = \RainLab\User\Models\User::all();
 }
 
 ==
@@ -26,7 +32,7 @@ function onStart() {
               <div class="row">
                 <div class="col">
                   <h4 class="card-title text-muted mb-2">Total User</h4>
-                  <span class="h2 font-weight-bold mb-0">350,897</span>
+                  <span class="h2 font-weight-bold mb-0">{{ users.count() }}</span>
                 </div>
                 <div class="col-auto total_user">
                   <div class="icon icon-shape bg-light-blue text-white rounded-15 shadow">

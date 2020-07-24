@@ -10,7 +10,8 @@ class Plugin extends PluginBase
     {
         return [
             'Codejunkie\Starterkit\Components\Authentication' => 'Authentication',
-            'Codejunkie\Starterkit\Components\Admin' => 'Admin'
+            'Codejunkie\Starterkit\Components\Admin' => 'Admin',
+            'Codejunkie\Starterkit\Components\ResetPassword' => 'ResetPassword'
         ];
     }
 

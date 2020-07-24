@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Reset Password
+
+# Model Form Field configuration
+form: $/codejunkie/starterkit/models/resetpassword/fields.yaml
+
+# Model Class name
+modelClass: Codejunkie\StarterKit\Models\ResetPassword
+
+# Default redirect location
+defaultRedirect: codejunkie/starterkit/resetpassword
+
+# Create page
+create:
+    title: Create Reset Password
+    redirect: codejunkie/starterkit/resetpassword/update/:id
+    redirectClose: codejunkie/starterkit/resetpassword
+
+# Update page
+update:
+    title: Edit Reset Password
+    redirect: codejunkie/starterkit/resetpassword
+    redirectClose: codejunkie/starterkit/resetpassword
+
+# Preview page
+preview:
+    title: Preview Reset Password
